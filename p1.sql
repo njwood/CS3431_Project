@@ -437,7 +437,6 @@ INSERT INTO Route VALUES(117,'202E_307');
 INSERT INTO Route VALUES(121,'202E_307');
 
 -- Floor
-
 INSERT INTO Floor VALUES(seq_fID.nextval,2,'201A');
 INSERT INTO Floor VALUES(seq_fID.nextval,2,'201B');
 INSERT INTO Floor VALUES(seq_fID.nextval,2,'201C');
