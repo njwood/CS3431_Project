@@ -4,9 +4,11 @@ DROP TABLE Edges;
 DROP TABLE Path;
 DROP TABLE PositionList;
 DROP TABLE Staff;
+DROP TABLE Floor;
 DROP TABLE Locations;
 DROP TABLE Positions;
 DROP SEQUENCE seq_eID;
+DROP SEQUENCE seq_fID;
 
 CREATE TABLE Positions(
     positionID varchar2(20),
@@ -37,7 +39,8 @@ CREATE TABLE Staff(
 CREATE TABLE PhoneNum(
     accountID varchar2(10),
     phoneNum number(4),
-    CONSTRAINT Phone_FK FOREIGN KEY (accountID) REFERENCES Staff(accountName) 
+    CONSTRAINT Phone_PK PRIMARY KEY(accountID, phoneNum),
+    CONSTRAINT Phone_FK FOREIGN KEY (accountID) REFERENCES Staff(accountName)
 );
 
 CREATE TABLE Edges(
@@ -70,7 +73,20 @@ CREATE TABLE Route(
     CONSTRAINT Route_FK2 FOREIGN KEY (pathID) REFERENCES Path(pathID)
 );
 
+CREATE TABLE Floor(
+    floorID number(3),
+    floorNumber number(1),
+    locationID varchar2(5),
+    CONSTRAINT Floor_PK PRIMARY KEY(floorID),
+    CONSTRAINT Floor_FK FOREIGN KEY (locationID) REFERENCES Locations(locationID)
+);
+
 CREATE SEQUENCE  seq_eID
+    MINVALUE 1
+    START WITH 1
+    INCREMENT BY 1;
+    
+CREATE SEQUENCE seq_fID
     MINVALUE 1
     START WITH 1
     INCREMENT BY 1;
@@ -420,6 +436,70 @@ INSERT INTO Route VALUES(113,'202E_307');
 INSERT INTO Route VALUES(117,'202E_307');
 INSERT INTO Route VALUES(121,'202E_307');
 
+-- Floor
+
+INSERT INTO Floor VALUES(seq_fID.nextval,2,'201A');
+INSERT INTO Floor VALUES(seq_fID.nextval,2,'201B');
+INSERT INTO Floor VALUES(seq_fID.nextval,2,'201C');
+INSERT INTO Floor VALUES(seq_fID.nextval,2,'202');
+INSERT INTO Floor VALUES(seq_fID.nextval,2,'202A');
+INSERT INTO Floor VALUES(seq_fID.nextval,2,'202B');
+INSERT INTO Floor VALUES(seq_fID.nextval,2,'202C');
+INSERT INTO Floor VALUES(seq_fID.nextval,2,'202D');
+INSERT INTO Floor VALUES(seq_fID.nextval,2,'202E');
+INSERT INTO Floor VALUES(seq_fID.nextval,2,'203');
+INSERT INTO Floor VALUES(seq_fID.nextval,2,'204');
+INSERT INTO Floor VALUES(seq_fID.nextval,2,'205');
+INSERT INTO Floor VALUES(seq_fID.nextval,2,'206');
+INSERT INTO Floor VALUES(seq_fID.nextval,2,'207');
+INSERT INTO Floor VALUES(seq_fID.nextval,2,'208');
+INSERT INTO Floor VALUES(seq_fID.nextval,2,'209');
+INSERT INTO Floor VALUES(seq_fID.nextval,2,'S2');
+INSERT INTO Floor VALUES(seq_fID.nextval,2,'H201');
+INSERT INTO Floor VALUES(seq_fID.nextval,2,'H202');
+INSERT INTO Floor VALUES(seq_fID.nextval,2,'H203');
+INSERT INTO Floor VALUES(seq_fID.nextval,2,'H204');
+INSERT INTO Floor VALUES(seq_fID.nextval,2,'H205');
+INSERT INTO Floor VALUES(seq_fID.nextval,2,'H206');
+INSERT INTO Floor VALUES(seq_fID.nextval,2,'H207');
+INSERT INTO Floor VALUES(seq_fID.nextval,2,'H208');
+INSERT INTO Floor VALUES(seq_fID.nextval,2,'H209');
+INSERT INTO Floor VALUES(seq_fID.nextval,2,'H210');
+INSERT INTO Floor VALUES(seq_fID.nextval,2,'H211');
+INSERT INTO Floor VALUES(seq_fID.nextval,2,'H212');
+INSERT INTO Floor VALUES(seq_fID.nextval,2,'H213');
+INSERT INTO Floor VALUES(seq_fID.nextval,2,'H214');
+INSERT INTO Floor VALUES(seq_fID.nextval,2,'H215');
+INSERT INTO Floor VALUES(seq_fID.nextval,3,'302A');
+INSERT INTO Floor VALUES(seq_fID.nextval,3,'302B');
+INSERT INTO Floor VALUES(seq_fID.nextval,3,'303');
+INSERT INTO Floor VALUES(seq_fID.nextval,3,'304');
+INSERT INTO Floor VALUES(seq_fID.nextval,3,'305A');
+INSERT INTO Floor VALUES(seq_fID.nextval,3,'305B');
+INSERT INTO Floor VALUES(seq_fID.nextval,3,'305C');
+INSERT INTO Floor VALUES(seq_fID.nextval,3,'305D');
+INSERT INTO Floor VALUES(seq_fID.nextval,3,'306');
+INSERT INTO Floor VALUES(seq_fID.nextval,3,'307');
+INSERT INTO Floor VALUES(seq_fID.nextval,3,'308');
+INSERT INTO Floor VALUES(seq_fID.nextval,3,'309');
+INSERT INTO Floor VALUES(seq_fID.nextval,3,'M');
+INSERT INTO Floor VALUES(seq_fID.nextval,3,'W');
+INSERT INTO Floor VALUES(seq_fID.nextval,3,'S3');
+INSERT INTO Floor VALUES(seq_fID.nextval,3,'H301');
+INSERT INTO Floor VALUES(seq_fID.nextval,3,'H302');
+INSERT INTO Floor VALUES(seq_fID.nextval,3,'H303');
+INSERT INTO Floor VALUES(seq_fID.nextval,3,'H304');
+INSERT INTO Floor VALUES(seq_fID.nextval,3,'H305');
+INSERT INTO Floor VALUES(seq_fID.nextval,3,'H306');
+INSERT INTO Floor VALUES(seq_fID.nextval,3,'H307');
+INSERT INTO Floor VALUES(seq_fID.nextval,3,'H308');
+INSERT INTO Floor VALUES(seq_fID.nextval,3,'H309');
+INSERT INTO Floor VALUES(seq_fID.nextval,3,'H310');
+INSERT INTO Floor VALUES(seq_fID.nextval,3,'H311');
+INSERT INTO Floor VALUES(seq_fID.nextval,3,'H312');
+INSERT INTO Floor VALUES(seq_fID.nextval,3,'H313');
+INSERT INTO Floor VALUES(seq_fID.nextval,3,'H314');
+INSERT INTO Floor VALUES(seq_fID.nextval,3,'H315');
 
 /* Testing to make sure the data has been entered properly
  
@@ -431,5 +511,6 @@ INSERT INTO Route VALUES(121,'202E_307');
  SELECT * FROM Edges;
  SELECT * FROM Path;
  SELECT * FROM Route;
+ SELECT * FROM Floor;
  
 */
