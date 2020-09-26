@@ -58,7 +58,7 @@ CREATE TABLE Path (
 
 CREATE TABLE PositionList(
     acctName varchar2(10),
-    positionID varchar2(20),
+    positionID varchar2(20) DEFAULT 'Curator',
     CONSTRAINT Position_PK PRIMARY KEY (acctName, positionID),
     CONSTRAINT Position_FK  FOREIGN KEY (acctName) REFERENCES Staff(accountName),
     CONSTRAINT Position_FK2 FOREIGN KEY (positionID) REFERENCES Positions(positionID)
