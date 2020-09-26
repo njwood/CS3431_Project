@@ -4,11 +4,9 @@ DROP TABLE Edges;
 DROP TABLE Path;
 DROP TABLE PositionList;
 DROP TABLE Staff;
-DROP TABLE Floor;
 DROP TABLE Locations;
 DROP TABLE Positions;
 DROP SEQUENCE seq_eID;
-DROP SEQUENCE seq_fID;
 
 CREATE TABLE Positions(
     positionID varchar2(20),
@@ -24,6 +22,7 @@ CREATE TABLE Locations(
     maxOccupancy number(1) DEFAULT NULL,
     xcoord number(4),
     ycoord number(4),
+    floor number(1),
     CONSTRAINT Locations_PK PRIMARY KEY(locationID)
 );
 
@@ -73,20 +72,7 @@ CREATE TABLE Route(
     CONSTRAINT Route_FK2 FOREIGN KEY (pathID) REFERENCES Path(pathID)
 );
 
-CREATE TABLE Floor(
-    floorID number(3),
-    floorNumber number(1),
-    locationID varchar2(5),
-    CONSTRAINT Floor_PK PRIMARY KEY(floorID),
-    CONSTRAINT Floor_FK FOREIGN KEY (locationID) REFERENCES Locations(locationID)
-);
-
 CREATE SEQUENCE seq_eID
-    MINVALUE 1
-    START WITH 1
-    INCREMENT BY 1;
-    
-CREATE SEQUENCE seq_fID
     MINVALUE 1
     START WITH 1
     INCREMENT BY 1;
@@ -113,68 +99,68 @@ INSERT INTO Positions VALUES('ARCHIVIST', 'Archivist', 7);
 
 -- Locations 
 
-INSERT INTO Locations VALUES('201A','201A','Office',1,640,200);
-INSERT INTO Locations VALUES('201B','201B','Office',1,575,200);
-INSERT INTO Locations VALUES('201C','201C','Office',2,465,200);
-INSERT INTO Locations VALUES('202','202','Gallery',NULL,395,270);
-INSERT INTO Locations VALUES('202A','202A','Office',2,70,405);
-INSERT INTO Locations VALUES('202B','202B','Office',1,170,405);
-INSERT INTO Locations VALUES('202C','202C','Office',1,275,405);
-INSERT INTO Locations VALUES('202D','202D','Office',1,380,405);
-INSERT INTO Locations VALUES('202E','202E','Office','2',465,405);
-INSERT INTO Locations VALUES('203','203','Gallery',NULL,885,340);
-INSERT INTO Locations VALUES('204','204 Lovecraft Room','Conference Room',NULL,980,340);
-INSERT INTO Locations VALUES('205','205','Office',2,465,340);
-INSERT INTO Locations VALUES('206','206','Office',3,1380,200);
-INSERT INTO Locations VALUES('207','207','Office',2,1250,200);
-INSERT INTO Locations VALUES('208','208','Closet',NULL,1075,200);
-INSERT INTO Locations VALUES('209','209 Museum Guides','Office',5,1015,200);
-INSERT INTO Locations VALUES('S2','2nd Floor Stairs','Stairs',NULL,815,160);
-INSERT INTO Locations VALUES('H201','Hallway 201','Hallway',NULL,70,350);
-INSERT INTO Locations VALUES('H202','Hallway 202','Hallway',NULL,170,350);
-INSERT INTO Locations VALUES('H203','Hallway 203','Hallway',NULL,275,350);
-INSERT INTO Locations VALUES('H204','Hallway 204','Hallway',NULL,380,350);
-INSERT INTO Locations VALUES('H205','Hallway 205','Hallway',NULL,465,350);
-INSERT INTO Locations VALUES('H206','Hallway 206','Hallway',NULL,465,270);
-INSERT INTO Locations VALUES('H207','Hallway 207','Hallway',NULL,575,270);
-INSERT INTO Locations VALUES('H208','Hallway 208','Hallway',NULL,640,270);
-INSERT INTO Locations VALUES('H209','Hallway 209','Hallway',NULL,815,270);
-INSERT INTO Locations VALUES('H210','Hallway 210','Hallway',NULL,885,270);
-INSERT INTO Locations VALUES('H211','Hallway 211','Hallway',NULL,980,270);
-INSERT INTO Locations VALUES('H212','Hallway 212','Hallway',NULL,1015,270);
-INSERT INTO Locations VALUES('H213','Hallway 213','Hallway',NULL,1075,270);
-INSERT INTO Locations VALUES('H214','Hallway 214','Hallway',NULL,1250,270);
-INSERT INTO Locations VALUES('H215','Hallway 215','Hallway',NULL,1380,270);
-INSERT INTO Locations VALUES('302A','302A','Office',1,440,215);
-INSERT INTO Locations VALUES('302B','302B','Office',1,580,215);
-INSERT INTO Locations VALUES('303','303','Office',1,350,215);
-INSERT INTO Locations VALUES('304','304','Conference Room',NULL,275,265);
-INSERT INTO Locations VALUES('305A','305A','Office',1,340,425);
-INSERT INTO Locations VALUES('305B','305B','Office',2,240,425);
-INSERT INTO Locations VALUES('305C','305C','Office',1,175,425);
-INSERT INTO Locations VALUES('305D','305D','Office',3,30,425);
-INSERT INTO Locations VALUES('306','306','Gallery',NULL,475,335);
-INSERT INTO Locations VALUES('307','307','Office',1,975,410);
-INSERT INTO Locations VALUES('308','308','Gallery',NULL,1040,365);
-INSERT INTO Locations VALUES('309','309','Gallery',NULL,1040,265);
-INSERT INTO Locations VALUES('M','Mens Restroom','Restroom',NULL,960,215);
-INSERT INTO Locations VALUES('W','Womens Restroom','Restroom',NULL,650,215);
-INSERT INTO Locations VALUES('S3', '3rd Floor Stairs','Stairs',NULL,780,85);
-INSERT INTO Locations VALUES('H301','Hallway 301','Hallway',NULL,30,360);
-INSERT INTO Locations VALUES('H302','Hallway 302','Hallway',NULL,175,360);
-INSERT INTO Locations VALUES('H303','Hallway 303','Hallway',NULL,240,360);
-INSERT INTO Locations VALUES('H304','Hallway 304','Hallway',NULL,340,360);
-INSERT INTO Locations VALUES('H305','Hallway 305','Hallway',NULL,380,360);
-INSERT INTO Locations VALUES('H306','Hallway 306','Hallway',NULL,350,265);
-INSERT INTO Locations VALUES('H307','Hallway 307','Hallway',NULL,380,265);
-INSERT INTO Locations VALUES('H308','Hallway 308','Hallway',NULL,440,265);
-INSERT INTO Locations VALUES('H309','Hallway 309','Hallway',NULL,475,265);
-INSERT INTO Locations VALUES('H310','Hallway 310','Hallway',NULL,580,265);
-INSERT INTO Locations VALUES('H311','Hallway 311','Hallway',NULL,650,265);
-INSERT INTO Locations VALUES('H312','Hallway 312','Hallway',NULL,780,265);
-INSERT INTO Locations VALUES('H313','Hallway 313','Hallway',NULL,960,265);
-INSERT INTO Locations VALUES('H314','Hallway 314','Hallway',NULL,975,265);
-INSERT INTO Locations VALUES('H315','Hallway 315','Hallway',NULL,975,365);
+INSERT INTO Locations VALUES('201A','201A','Office',1,640,200,2);
+INSERT INTO Locations VALUES('201B','201B','Office',1,575,200,2);
+INSERT INTO Locations VALUES('201C','201C','Office',2,465,200,2);
+INSERT INTO Locations VALUES('202','202','Gallery',NULL,395,270,2);
+INSERT INTO Locations VALUES('202A','202A','Office',2,70,405,2);
+INSERT INTO Locations VALUES('202B','202B','Office',1,170,405,2);
+INSERT INTO Locations VALUES('202C','202C','Office',1,275,405,2);
+INSERT INTO Locations VALUES('202D','202D','Office',1,380,405,2);
+INSERT INTO Locations VALUES('202E','202E','Office','2',465,405,2);
+INSERT INTO Locations VALUES('203','203','Gallery',NULL,885,340,2);
+INSERT INTO Locations VALUES('204','204 Lovecraft Room','Conference Room',NULL,980,340,2);
+INSERT INTO Locations VALUES('205','205','Office',2,465,340,2);
+INSERT INTO Locations VALUES('206','206','Office',3,1380,200,2);
+INSERT INTO Locations VALUES('207','207','Office',2,1250,200,2);
+INSERT INTO Locations VALUES('208','208','Closet',NULL,1075,200,2);
+INSERT INTO Locations VALUES('209','209 Museum Guides','Office',5,1015,200,2);
+INSERT INTO Locations VALUES('S2','2nd Floor Stairs','Stairs',NULL,815,160,2);
+INSERT INTO Locations VALUES('H201','Hallway 201','Hallway',NULL,70,350,2);
+INSERT INTO Locations VALUES('H202','Hallway 202','Hallway',NULL,170,350,2);
+INSERT INTO Locations VALUES('H203','Hallway 203','Hallway',NULL,275,350,2);
+INSERT INTO Locations VALUES('H204','Hallway 204','Hallway',NULL,380,350,2);
+INSERT INTO Locations VALUES('H205','Hallway 205','Hallway',NULL,465,350,2);
+INSERT INTO Locations VALUES('H206','Hallway 206','Hallway',NULL,465,270,2);
+INSERT INTO Locations VALUES('H207','Hallway 207','Hallway',NULL,575,270,2);
+INSERT INTO Locations VALUES('H208','Hallway 208','Hallway',NULL,640,270,2);
+INSERT INTO Locations VALUES('H209','Hallway 209','Hallway',NULL,815,270,2);
+INSERT INTO Locations VALUES('H210','Hallway 210','Hallway',NULL,885,270,2);
+INSERT INTO Locations VALUES('H211','Hallway 211','Hallway',NULL,980,270,2);
+INSERT INTO Locations VALUES('H212','Hallway 212','Hallway',NULL,1015,270,2);
+INSERT INTO Locations VALUES('H213','Hallway 213','Hallway',NULL,1075,270,2);
+INSERT INTO Locations VALUES('H214','Hallway 214','Hallway',NULL,1250,270,2);
+INSERT INTO Locations VALUES('H215','Hallway 215','Hallway',NULL,1380,270,2);
+INSERT INTO Locations VALUES('302A','302A','Office',1,440,215,3);
+INSERT INTO Locations VALUES('302B','302B','Office',1,580,215,3);
+INSERT INTO Locations VALUES('303','303','Office',1,350,215,3);
+INSERT INTO Locations VALUES('304','304','Conference Room',NULL,275,265,3);
+INSERT INTO Locations VALUES('305A','305A','Office',1,340,425,3);
+INSERT INTO Locations VALUES('305B','305B','Office',2,240,425,3);
+INSERT INTO Locations VALUES('305C','305C','Office',1,175,425,3);
+INSERT INTO Locations VALUES('305D','305D','Office',3,30,425,3);
+INSERT INTO Locations VALUES('306','306','Gallery',NULL,475,335,3);
+INSERT INTO Locations VALUES('307','307','Office',1,975,410,3);
+INSERT INTO Locations VALUES('308','308','Gallery',NULL,1040,365,3);
+INSERT INTO Locations VALUES('309','309','Gallery',NULL,1040,265,3);
+INSERT INTO Locations VALUES('M','Mens Restroom','Restroom',NULL,960,215,3);
+INSERT INTO Locations VALUES('W','Womens Restroom','Restroom',NULL,650,215,3);
+INSERT INTO Locations VALUES('S3', '3rd Floor Stairs','Stairs',NULL,780,85,3);
+INSERT INTO Locations VALUES('H301','Hallway 301','Hallway',NULL,30,360,3);
+INSERT INTO Locations VALUES('H302','Hallway 302','Hallway',NULL,175,360,3);
+INSERT INTO Locations VALUES('H303','Hallway 303','Hallway',NULL,240,360,3);
+INSERT INTO Locations VALUES('H304','Hallway 304','Hallway',NULL,340,360,3);
+INSERT INTO Locations VALUES('H305','Hallway 305','Hallway',NULL,380,360,3);
+INSERT INTO Locations VALUES('H306','Hallway 306','Hallway',NULL,350,265,3);
+INSERT INTO Locations VALUES('H307','Hallway 307','Hallway',NULL,380,265,3);
+INSERT INTO Locations VALUES('H308','Hallway 308','Hallway',NULL,440,265,3);
+INSERT INTO Locations VALUES('H309','Hallway 309','Hallway',NULL,475,265,3);
+INSERT INTO Locations VALUES('H310','Hallway 310','Hallway',NULL,580,265,3);
+INSERT INTO Locations VALUES('H311','Hallway 311','Hallway',NULL,650,265,3);
+INSERT INTO Locations VALUES('H312','Hallway 312','Hallway',NULL,780,265,3);
+INSERT INTO Locations VALUES('H313','Hallway 313','Hallway',NULL,960,265,3);
+INSERT INTO Locations VALUES('H314','Hallway 314','Hallway',NULL,975,265,3);
+INSERT INTO Locations VALUES('H315','Hallway 315','Hallway',NULL,975,365,3);
 
 -- Staff
 INSERT INTO Staff VALUES('fargo','Caroline','Fargo','205');
@@ -436,70 +422,6 @@ INSERT INTO Route VALUES(113,'202E_307');
 INSERT INTO Route VALUES(117,'202E_307');
 INSERT INTO Route VALUES(121,'202E_307');
 
--- Floor
-INSERT INTO Floor VALUES(seq_fID.nextval,2,'201A');
-INSERT INTO Floor VALUES(seq_fID.nextval,2,'201B');
-INSERT INTO Floor VALUES(seq_fID.nextval,2,'201C');
-INSERT INTO Floor VALUES(seq_fID.nextval,2,'202');
-INSERT INTO Floor VALUES(seq_fID.nextval,2,'202A');
-INSERT INTO Floor VALUES(seq_fID.nextval,2,'202B');
-INSERT INTO Floor VALUES(seq_fID.nextval,2,'202C');
-INSERT INTO Floor VALUES(seq_fID.nextval,2,'202D');
-INSERT INTO Floor VALUES(seq_fID.nextval,2,'202E');
-INSERT INTO Floor VALUES(seq_fID.nextval,2,'203');
-INSERT INTO Floor VALUES(seq_fID.nextval,2,'204');
-INSERT INTO Floor VALUES(seq_fID.nextval,2,'205');
-INSERT INTO Floor VALUES(seq_fID.nextval,2,'206');
-INSERT INTO Floor VALUES(seq_fID.nextval,2,'207');
-INSERT INTO Floor VALUES(seq_fID.nextval,2,'208');
-INSERT INTO Floor VALUES(seq_fID.nextval,2,'209');
-INSERT INTO Floor VALUES(seq_fID.nextval,2,'S2');
-INSERT INTO Floor VALUES(seq_fID.nextval,2,'H201');
-INSERT INTO Floor VALUES(seq_fID.nextval,2,'H202');
-INSERT INTO Floor VALUES(seq_fID.nextval,2,'H203');
-INSERT INTO Floor VALUES(seq_fID.nextval,2,'H204');
-INSERT INTO Floor VALUES(seq_fID.nextval,2,'H205');
-INSERT INTO Floor VALUES(seq_fID.nextval,2,'H206');
-INSERT INTO Floor VALUES(seq_fID.nextval,2,'H207');
-INSERT INTO Floor VALUES(seq_fID.nextval,2,'H208');
-INSERT INTO Floor VALUES(seq_fID.nextval,2,'H209');
-INSERT INTO Floor VALUES(seq_fID.nextval,2,'H210');
-INSERT INTO Floor VALUES(seq_fID.nextval,2,'H211');
-INSERT INTO Floor VALUES(seq_fID.nextval,2,'H212');
-INSERT INTO Floor VALUES(seq_fID.nextval,2,'H213');
-INSERT INTO Floor VALUES(seq_fID.nextval,2,'H214');
-INSERT INTO Floor VALUES(seq_fID.nextval,2,'H215');
-INSERT INTO Floor VALUES(seq_fID.nextval,3,'302A');
-INSERT INTO Floor VALUES(seq_fID.nextval,3,'302B');
-INSERT INTO Floor VALUES(seq_fID.nextval,3,'303');
-INSERT INTO Floor VALUES(seq_fID.nextval,3,'304');
-INSERT INTO Floor VALUES(seq_fID.nextval,3,'305A');
-INSERT INTO Floor VALUES(seq_fID.nextval,3,'305B');
-INSERT INTO Floor VALUES(seq_fID.nextval,3,'305C');
-INSERT INTO Floor VALUES(seq_fID.nextval,3,'305D');
-INSERT INTO Floor VALUES(seq_fID.nextval,3,'306');
-INSERT INTO Floor VALUES(seq_fID.nextval,3,'307');
-INSERT INTO Floor VALUES(seq_fID.nextval,3,'308');
-INSERT INTO Floor VALUES(seq_fID.nextval,3,'309');
-INSERT INTO Floor VALUES(seq_fID.nextval,3,'M');
-INSERT INTO Floor VALUES(seq_fID.nextval,3,'W');
-INSERT INTO Floor VALUES(seq_fID.nextval,3,'S3');
-INSERT INTO Floor VALUES(seq_fID.nextval,3,'H301');
-INSERT INTO Floor VALUES(seq_fID.nextval,3,'H302');
-INSERT INTO Floor VALUES(seq_fID.nextval,3,'H303');
-INSERT INTO Floor VALUES(seq_fID.nextval,3,'H304');
-INSERT INTO Floor VALUES(seq_fID.nextval,3,'H305');
-INSERT INTO Floor VALUES(seq_fID.nextval,3,'H306');
-INSERT INTO Floor VALUES(seq_fID.nextval,3,'H307');
-INSERT INTO Floor VALUES(seq_fID.nextval,3,'H308');
-INSERT INTO Floor VALUES(seq_fID.nextval,3,'H309');
-INSERT INTO Floor VALUES(seq_fID.nextval,3,'H310');
-INSERT INTO Floor VALUES(seq_fID.nextval,3,'H311');
-INSERT INTO Floor VALUES(seq_fID.nextval,3,'H312');
-INSERT INTO Floor VALUES(seq_fID.nextval,3,'H313');
-INSERT INTO Floor VALUES(seq_fID.nextval,3,'H314');
-INSERT INTO Floor VALUES(seq_fID.nextval,3,'H315');
-
 /* Testing to make sure the data has been entered properly
  
  SELECT * FROM Positions;
@@ -510,6 +432,5 @@ INSERT INTO Floor VALUES(seq_fID.nextval,3,'H315');
  SELECT * FROM Edges;
  SELECT * FROM Path;
  SELECT * FROM Route;
- SELECT * FROM Floor;
  
 */
