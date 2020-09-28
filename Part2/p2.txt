@@ -1,0 +1,10 @@
+drop view NoCurator;
+
+create view NoCurator as
+    select L.locationID, S.accountName
+    from Location L
+    join Staff S
+        on L.locationID  = S.locationID
+    join StaffPosition SP
+        on SP.accountName = S.accountName
+    where SP.positionID != 'Curator' and L.locationType = 'Office';
