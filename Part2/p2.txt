@@ -7,4 +7,10 @@ create view NoCurator as
         on L.locationID  = S.locationID
     join StaffPosition SP
         on SP.accountName = S.accountName
-    where SP.positionID != 'Curator' and L.locationType = 'Office';
+    where (L.locationType = 'Office') and (SP.positionID not like '%CURATOR%');
+    
+--select * from NoCurator;
+
+select locationID, count(accountName) as CNT
+    from NoCurator
+group by locationID;
