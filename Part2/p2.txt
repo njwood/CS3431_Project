@@ -24,3 +24,15 @@ begin
     end if;
 end;
 /
+
+create or replace trigger OnlyStaircases
+after insert on Edge
+for each row
+begin
+    if(SUBSTR(:new.startingID, 1, 1) = SUBSTR(:new.endingID, 1, 1)) then
+        if(SUBSTR(:new.startingID, 2, 2) = SUBSTR(:new.endingID, 2, 2)) then
+            RAISE_APPLICATION_ERROR(-20005, 'Edge: staircases must be different');
+        end if;
+    end if;
+end;
+/
