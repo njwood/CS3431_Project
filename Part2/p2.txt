@@ -14,3 +14,13 @@ create view NoCurator as
 select locationID, count(accountName) as CNT
     from NoCurator
 group by locationID;
+
+create or replace trigger NoSameStartEnd
+after insert on Edge
+for each row
+begin 
+    if(:new.startingID = :new.endingID) then
+        RAISE_APPLICATION_ERROR(-20004, 'Edge: startingID and endingID cannot be the same');
+    end if;
+end;
+/
