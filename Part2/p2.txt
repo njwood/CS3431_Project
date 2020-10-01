@@ -106,3 +106,24 @@ end;
 /
 
 -- Question 6 
+
+CREATE OR REPLACE TRIGGER JobLimit
+after INSERT OR UPDATE ON StaffPosition
+DECLARE 
+    jobTotal number;
+    
+    numberOfPositions number;
+    cursor staffPosCount is
+        select AccountName, count(positionID) as CNT 
+        from StaffPosition
+        group by AccountName;
+BEGIN
+    
+    for i in staffPosCount loop
+        if(i.CNT > 3) then
+            RAISE_APPLICATION_ERROR(-20008, 'An account has more than 3 positions!!!');
+        end if;
+    end loop;
+    
+END;
+/
