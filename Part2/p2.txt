@@ -69,4 +69,40 @@ insert into Edge values('A201', 'A201');
 
 -- Question 5
 
+create or replace Trigger MustBeOffice
+before insert on Office
+for each row
+Declare
+    CURSOR OfficeCur IS 
+        SELECT locationID, maxOccupancy 
+        from Office;
+        
+    cursor locationCur is
+        select locationID, locationName, locationType, xcoord, ycoord
+        from Location;
+
+    officeCount number;
+    checkPreExisting number;
+Begin
+    
+    for officeRow in OfficeCur loop
+        for locationRow in locationCur loop
+            if(officeRow.locationID = locationRow.locationID) then
+                if(locationRow.locationType != 'Office') then
+                    RAISE_APPLICATION_ERROR(-20010, 'There already exists and Office that is not type of Office in Location');
+                end if;
+            end if;
+        end loop;
+    end loop;
+    
+    select count(Location.locationID) into officeCount
+    from Location
+    where :new.locationID = Location.locationID and Location.locationType != 'Office';
+
+    if(officeCount > 0) then
+            RAISE_APPLICATION_ERROR(-20010, 'Cannot have Office that is not Office type');
+    end if;
+end;
+/
+
 -- Question 6 
