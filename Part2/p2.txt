@@ -1,3 +1,5 @@
+--  Question 1
+
 drop view NoCurator;
 
 create view NoCurator as
@@ -15,6 +17,29 @@ select locationID, count(accountName) as CNT
     from NoCurator
 group by locationID;
 
+-- Question 2
+
+CREATE OR REPLACE PROCEDURE StaffInOffice (location_id IN varchar2) IS
+locationVar varchar2(50);
+maxOccu number(1);
+empCount number(1);
+BEGIN
+SELECT maxOccupancy, COUNT(accountName), Location.locationID INTO maxOccu, empCount, locationVar FROM Location
+JOIN Office
+ON Location.locationID = Office.locationID
+JOIN Staff
+ON Location.locationID = Staff.locationID
+WHERE Location.locationID = StaffInOffice.location_id
+GROUP BY Location.locationID, maxOccupancy;
+dbms_output.put_line('Office: ' || locationVar || ' Max Occupancy: '  || maxOccu || ' Employees Assigned: ' || empCount);
+EXCEPTION
+WHEN OTHERS THEN
+RAISE_APPLICATION_ERROR(-20001,  'Input is an invalid Office');
+END;
+/
+
+-- Question 3 
+
 create or replace trigger NoSameStartEnd
 after insert on Edge
 for each row
@@ -24,6 +49,8 @@ begin
     end if;
 end;
 /
+
+-- Question 4 
 
 create or replace trigger OnlyStaircases
 after insert on Edge
@@ -39,3 +66,7 @@ end;
 
 insert into Edge values('S3', 'S3');
 insert into Edge values('A201', 'A201');
+
+-- Question 5
+
+-- Question 6 
