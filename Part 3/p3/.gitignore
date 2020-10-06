@@ -1,2 +1,5 @@
 out/**
-.idea/**
+/.idea/**
+ojdbc6.jar
+ojdbc7.jar
+ojdbc8.jar

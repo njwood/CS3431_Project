@@ -10,8 +10,22 @@ public class p3 {
 
     public static void main(String[] args) throws SQLException {
 
+        if(args.length < 2) {
+            System.out.println("Requires: [USERNAME] [PASSWORD] [COMMAND]");
+            return;
+        }
+
         USERID = args[0];
         PASSWORD = args[1];
+
+        if(args.length <= 2) {
+            System.out.println("1 - Report Location Information");
+            System.out.println("2 - Report Path Information");
+            System.out.println("3 - Report Staff Office Information");
+            System.out.println("4 - Update Location Type");
+            System.out.println("5 - Exit Program");
+            return;
+        }
 
         // Connection to the database
         try {
@@ -35,16 +49,7 @@ public class p3 {
 
         //System.out.println("Connection Successful!");
 
-        if(args.length == 2){
-            System.out.println("1 - Report Location Information");
-            System.out.println("2 - Report Path Information");
-            System.out.println("3 - Report Staff Office Information");
-            System.out.println("4 - Update Location Type");
-            System.out.println("5 - Exit Program");
-            return;
-        }
-
-        else if(args[2].equals("1")){
+        if(args[2].equals("1")){
 
             System.out.println("Enter LocationID: ");
             Scanner userInput = new Scanner(System.in);
@@ -67,7 +72,9 @@ public class p3 {
                 System.out.println("X-Coordinate: " + rset.getInt("xcoord"));
                 System.out.println("Y-Coordinate: " + rset.getInt("ycoord"));
                 System.out.println("Floor: " + rset.getString("floor"));
-                return;
+
+                stmt.close();
+                rset.close();
 
             } catch (SQLException e){
                 System.out.println(e.getMessage());
@@ -88,7 +95,10 @@ public class p3 {
                 while(rset.next()){
                     System.out.println(rset.getString("startingID") + " " + rset.getString("endingID"));
                 }
-                return;
+
+                stmt.close();
+                rset.close();
+
             } catch (SQLException e) {
                 System.out.println(e.getMessage());
             }
@@ -113,12 +123,15 @@ public class p3 {
                 System.out.println("Floor: " + rset.getString("floor"));
                 System.out.println("Maximum Occupancy: " + rset.getInt("maxoccupancy"));
 
+                stmt.close();
+                rset.close();
+
             } catch (SQLException e) {
                 e.printStackTrace();
             }
         }
 
-         else if(args[2].equals("4")){
+        else if(args[2].equals("4")){
             System.out.println("Enter the locationID: ");
             Scanner userInputLocation = new Scanner(System.in);
             String inputLocation = userInputLocation.nextLine();
@@ -137,17 +150,22 @@ public class p3 {
             Statement stmt = connection.createStatement();
             int updatedRow = stmt.executeUpdate(updateSQL);
 
+            stmt.close();
+
             System.out.println("Row Updated Successfully!");
         }
 
-         else if(args[2].equals("5")){
+        else if(args[2].equals("5")){
              System.out.println("Exiting program...");
-             return;
         }
-         else {
+        else {
              System.out.println("Invalid parameters. Please follow the format of: USERNAME PASSWORD ARGUMENT");
              System.out.println("Arguments range from 1 - 5. If you want to see what each value does please enter just your username and password.");
         }
+
+        connection.close();
+
+        return;
     }
 
 }
